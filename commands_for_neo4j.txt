@@ -1,0 +1,81 @@
+MATCH (p:Person)-[r:ASSOCIATED_WITH]->(o:Organization)
+RETURN p, r, o
+LIMIT 100
+
+// Fetch person-to-person mentions (limit for clarity in visualization)
+CALL {
+  MATCH (p1:Person)-[r:MENTIONS]->(p2:Person)
+  WHERE id(p1) < id(p2)  // Avoid duplicate pairs
+  RETURN p1, p2, r
+  ORDER BY r.weight DESC // If weight exists
+  LIMIT 500
+}
+RETURN p1, p2, r
+
+# Visualise the connections to Citi
+MATCH (o:Organization)
+WHERE o.name IN ["Citi"]
+WITH collect(o) AS targetOrgs
+UNWIND targetOrgs AS org
+MATCH (p:Person)-[r:ASSOCIATED_WITH]->(org)
+RETURN DISTINCT p, r, org
+
+// Who co-occurs with "Alexander Phillips"
+MATCH (p:Person {name: "Alexander Phillips"})-[r:MENTIONS]-(other:Person)
+RETURN p, r, other
+ORDER BY r.count DESC
+LIMIT 50
+
+# Get all orgs connected to a person
+MATCH (p:Person {name: "Ray Dalio"})-[:ASSOCIATED_WITH]->(o:Organization)
+RETURN p, o
+
+
+MATCH (p:Person {name: "Ray Dalio"})-[r:MENTIONS]-(other:Person)
+RETURN p, r, other
+ORDER BY r.count DESC
+LIMIT 50
+
+# Common connections
+MATCH (p:Person)
+WHERE p.name IN ["Donald Trump", "David Solomon"]
+SET p:Highlighted
+
+MATCH (t:Person {name: "Donald Trump"})-[r1:MENTIONS]-(shared:Person)-[r2:MENTIONS]-(d:Person {name: "David Solomon"})
+WITH shared, r1, r2, t, d, (r1.count + r2.count) AS total_mentions
+ORDER BY total_mentions DESC
+LIMIT 100
+RETURN shared, r1, r2, t, d
+
+MATCH (p:Person:Highlighted)
+WHERE p.name IN ["Donald Trump", "David Solomon"]
+REMOVE p:Highlighted
+
+
+# Shortest Path
+MATCH (p:Person {name: "Alexander Phillips"}), (o:Organization {name: "KPMG"})
+MATCH path = shortestPath(
+  (p)-[:MENTIONS|ASSOCIATED_WITH*..4]-(o)
+)
+WHERE all(n IN nodes(path)[1..-1] WHERE n:Person OR n = o)
+RETURN path
+
+
+# Let's say you want to check if a person, say Trump, is connected to some other set of people, 
+# say someone named Peter, Jamie Dimon, John Curtice
+UNWIND ["Elog Musk", "Jamie Dimon", "John Curtice"] AS name
+MATCH (p:Person {name: name})
+SET p:ImportantPerson
+
+MATCH (p:Person {name: "Trump"})-[r:MENTIONS]-(colleague:Person)
+SET p:PIVOT
+RETURN p, r, colleague
+ORDER BY r.count DESC
+
+# 2. Explore a Person's Network
+# “Who does Trump frequently co-occur with?”
+
+MATCH (p:Person {name: "Trump"})-[r:MENTIONS]-(other:Person)
+RETURN p, r, other
+ORDER BY r.count DESC
+LIMIT 30

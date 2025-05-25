@@ -1,0 +1,164 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 700px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#a1c9f4", "font": {"size": 24}, "id": "Jamie Dimon", "label": "Jamie Dimon", "shape": "dot", "size": 93, "title": "Jamie Dimon \n Degree: 9 \n Articles: 44"}, {"color": "#ffb482", "font": {"size": 24}, "id": "Elon Musk", "label": "Elon Musk", "shape": "dot", "size": 31, "title": "Elon Musk \n Degree: 8 \n Articles: 13"}, {"color": "#8de5a1", "font": {"size": 24}, "id": "David Solomon", "label": "David Solomon", "shape": "dot", "size": 77, "title": "David Solomon \n Degree: 8 \n Articles: 36"}, {"color": "#ff9f9b", "font": {"size": 24}, "id": "Ken Griffin", "label": "Ken Griffin", "shape": "dot", "size": 55, "title": "Ken Griffin \n Degree: 10 \n Articles: 25"}, {"color": "#d0bbff", "font": {"size": 24}, "id": "John Waldron", "label": "John Waldron", "shape": "dot", "size": 29, "title": "John Waldron \n Degree: 6 \n Articles: 12"}, {"color": "#debb9b", "font": {"size": 24}, "id": "Brevan Howard", "label": "Brevan Howard", "shape": "dot", "size": 31, "title": "Brevan Howard \n Degree: 8 \n Articles: 13"}, {"color": "#fab0e4", "font": {"size": 24}, "id": "Jane Fraser", "label": "Jane Fraser", "shape": "dot", "size": 47, "title": "Jane Fraser \n Degree: 6 \n Articles: 21"}, {"color": "#cfcfcf", "font": {"size": 24}, "id": "Donald Trump", "label": "Donald Trump", "shape": "dot", "size": 113, "title": "Donald Trump \n Degree: 14 \n Articles: 54"}, {"color": "#fffea3", "font": {"size": 24}, "id": "Vis Raghavan", "label": "Vis Raghavan", "shape": "dot", "size": 41, "title": "Vis Raghavan \n Degree: 7 \n Articles: 18"}, {"color": "#b9f2f0", "font": {"size": 24}, "id": "Georges Elhedery", "label": "Georges Elhedery", "shape": "dot", "size": 37, "title": "Georges Elhedery \n Degree: 7 \n Articles: 16"}, {"color": "#a1c9f4", "font": {"size": 24}, "id": "Christian Sewing", "label": "Christian Sewing", "shape": "dot", "size": 43, "title": "Christian Sewing \n Degree: 4 \n Articles: 19"}, {"color": "#ffb482", "font": {"size": 24}, "id": "Michael Roberts", "label": "Michael Roberts", "shape": "dot", "size": 21, "title": "Michael Roberts \n Degree: 2 \n Articles: 8"}, {"color": "#8de5a1", "font": {"size": 24}, "id": "Carter McIntosh", "label": "Carter McIntosh", "shape": "dot", "size": 27, "title": "Carter McIntosh \n Degree: 3 \n Articles: 11"}, {"color": "#ff9f9b", "font": {"size": 24}, "id": "Ted Pick", "label": "Ted Pick", "shape": "dot", "size": 21, "title": "Ted Pick \n Degree: 5 \n Articles: 8"}, {"color": "#d0bbff", "font": {"size": 24}, "id": "Jes Staley", "label": "Jes Staley", "shape": "dot", "size": 25, "title": "Jes Staley \n Degree: 3 \n Articles: 10"}, {"color": "#debb9b", "font": {"size": 24}, "id": "Balyasny", "label": "Balyasny", "shape": "dot", "size": 23, "title": "Balyasny \n Degree: 4 \n Articles: 9"}, {"color": "#fab0e4", "font": {"size": 24}, "id": "Steve Cohen", "label": "Steve Cohen", "shape": "dot", "size": 27, "title": "Steve Cohen \n Degree: 6 \n Articles: 11"}, {"color": "#cfcfcf", "font": {"size": 24}, "id": "Michael Gelband", "label": "Michael Gelband", "shape": "dot", "size": 21, "title": "Michael Gelband \n Degree: 3 \n Articles: 8"}, {"color": "#fffea3", "font": {"size": 24}, "id": "Ken Moelis", "label": "Ken Moelis", "shape": "dot", "size": 21, "title": "Ken Moelis \n Degree: 1 \n Articles: 8"}]);
+                  edges = new vis.DataSet([{"color": "#a1c9f4", "from": "Jamie Dimon", "title": "Weight: 1", "to": "Elon Musk", "value": 1}, {"color": "#a1c9f4", "from": "Jamie Dimon", "title": "Weight: 1", "to": "David Solomon", "value": 1}, {"color": "#a1c9f4", "from": "Jamie Dimon", "title": "Weight: 1", "to": "Ken Griffin", "value": 1}, {"color": "#a1c9f4", "from": "Jamie Dimon", "title": "Weight: 1", "to": "John Waldron", "value": 1}, {"color": "#a1c9f4", "from": "Jamie Dimon", "title": "Weight: 1", "to": "Brevan Howard", "value": 1}, {"color": "#a1c9f4", "from": "Jamie Dimon", "title": "Weight: 1", "to": "Jane Fraser", "value": 1}, {"color": "#a1c9f4", "from": "Jamie Dimon", "title": "Weight: 1", "to": "Donald Trump", "value": 1}, {"color": "#a1c9f4", "from": "Jamie Dimon", "title": "Weight: 1", "to": "Vis Raghavan", "value": 1}, {"color": "#a1c9f4", "from": "Jamie Dimon", "title": "Weight: 1", "to": "Georges Elhedery", "value": 1}, {"color": "#ffb482", "from": "Elon Musk", "title": "Weight: 1", "to": "Georges Elhedery", "value": 1}, {"color": "#ffb482", "from": "Elon Musk", "title": "Weight: 1", "to": "David Solomon", "value": 1}, {"color": "#ffb482", "from": "Elon Musk", "title": "Weight: 1", "to": "Ken Griffin", "value": 1}, {"color": "#ffb482", "from": "Elon Musk", "title": "Weight: 1", "to": "John Waldron", "value": 1}, {"color": "#ffb482", "from": "Elon Musk", "title": "Weight: 1", "to": "Donald Trump", "value": 1}, {"color": "#ffb482", "from": "Elon Musk", "title": "Weight: 1", "to": "Ted Pick", "value": 1}, {"color": "#ffb482", "from": "Elon Musk", "title": "Weight: 1", "to": "Brevan Howard", "value": 1}, {"color": "#8de5a1", "from": "David Solomon", "title": "Weight: 1", "to": "Ken Griffin", "value": 1}, {"color": "#8de5a1", "from": "David Solomon", "title": "Weight: 1", "to": "John Waldron", "value": 1}, {"color": "#8de5a1", "from": "David Solomon", "title": "Weight: 1", "to": "Jane Fraser", "value": 1}, {"color": "#8de5a1", "from": "David Solomon", "title": "Weight: 1", "to": "Donald Trump", "value": 1}, {"color": "#8de5a1", "from": "David Solomon", "title": "Weight: 1", "to": "Vis Raghavan", "value": 1}, {"color": "#8de5a1", "from": "David Solomon", "title": "Weight: 1", "to": "Brevan Howard", "value": 1}, {"color": "#ff9f9b", "from": "Ken Griffin", "title": "Weight: 1", "to": "John Waldron", "value": 1}, {"color": "#ff9f9b", "from": "Ken Griffin", "title": "Weight: 1", "to": "Brevan Howard", "value": 1}, {"color": "#ff9f9b", "from": "Ken Griffin", "title": "Weight: 1", "to": "Donald Trump", "value": 1}, {"color": "#ff9f9b", "from": "Ken Griffin", "title": "Weight: 1", "to": "Jes Staley", "value": 1}, {"color": "#ff9f9b", "from": "Ken Griffin", "title": "Weight: 1", "to": "Balyasny", "value": 1}, {"color": "#ff9f9b", "from": "Ken Griffin", "title": "Weight: 1", "to": "Steve Cohen", "value": 1}, {"color": "#ff9f9b", "from": "Ken Griffin", "title": "Weight: 1", "to": "Michael Gelband", "value": 1}, {"color": "#d0bbff", "from": "John Waldron", "title": "Weight: 1", "to": "Donald Trump", "value": 1}, {"color": "#d0bbff", "from": "John Waldron", "title": "Weight: 1", "to": "Jane Fraser", "value": 1}, {"color": "#debb9b", "from": "Brevan Howard", "title": "Weight: 1", "to": "Donald Trump", "value": 1}, {"color": "#debb9b", "from": "Brevan Howard", "title": "Weight: 1", "to": "Vis Raghavan", "value": 1}, {"color": "#debb9b", "from": "Brevan Howard", "title": "Weight: 1", "to": "Steve Cohen", "value": 1}, {"color": "#debb9b", "from": "Brevan Howard", "title": "Weight: 1", "to": "Michael Gelband", "value": 1}, {"color": "#fab0e4", "from": "Jane Fraser", "title": "Weight: 1", "to": "Donald Trump", "value": 1}, {"color": "#fab0e4", "from": "Jane Fraser", "title": "Weight: 1", "to": "Vis Raghavan", "value": 1}, {"color": "#fab0e4", "from": "Jane Fraser", "title": "Weight: 1", "to": "Balyasny", "value": 1}, {"color": "#cfcfcf", "from": "Donald Trump", "title": "Weight: 1", "to": "Georges Elhedery", "value": 1}, {"color": "#cfcfcf", "from": "Donald Trump", "title": "Weight: 1", "to": "Christian Sewing", "value": 1}, {"color": "#cfcfcf", "from": "Donald Trump", "title": "Weight: 1", "to": "Vis Raghavan", "value": 1}, {"color": "#cfcfcf", "from": "Donald Trump", "title": "Weight: 1", "to": "Ted Pick", "value": 1}, {"color": "#cfcfcf", "from": "Donald Trump", "title": "Weight: 1", "to": "Steve Cohen", "value": 1}, {"color": "#cfcfcf", "from": "Donald Trump", "title": "Weight: 1", "to": "Balyasny", "value": 1}, {"color": "#cfcfcf", "from": "Donald Trump", "title": "Weight: 1", "to": "Jes Staley", "value": 1}, {"color": "#fffea3", "from": "Vis Raghavan", "title": "Weight: 1", "to": "Georges Elhedery", "value": 1}, {"color": "#fffea3", "from": "Vis Raghavan", "title": "Weight: 1", "to": "Ted Pick", "value": 1}, {"color": "#b9f2f0", "from": "Georges Elhedery", "title": "Weight: 1", "to": "Christian Sewing", "value": 1}, {"color": "#b9f2f0", "from": "Georges Elhedery", "title": "Weight: 1", "to": "Michael Roberts", "value": 1}, {"color": "#b9f2f0", "from": "Georges Elhedery", "title": "Weight: 1", "to": "Carter McIntosh", "value": 1}, {"color": "#a1c9f4", "from": "Christian Sewing", "title": "Weight: 1", "to": "Ted Pick", "value": 1}, {"color": "#a1c9f4", "from": "Christian Sewing", "title": "Weight: 1", "to": "Jes Staley", "value": 1}, {"color": "#ffb482", "from": "Michael Roberts", "title": "Weight: 1", "to": "Carter McIntosh", "value": 1}, {"color": "#8de5a1", "from": "Carter McIntosh", "title": "Weight: 1", "to": "Steve Cohen", "value": 1}, {"color": "#ff9f9b", "from": "Ted Pick", "title": "Weight: 1", "to": "Ken Moelis", "value": 1}, {"color": "#debb9b", "from": "Balyasny", "title": "Weight: 1", "to": "Steve Cohen", "value": 1}, {"color": "#fab0e4", "from": "Steve Cohen", "title": "Weight: 1", "to": "Michael Gelband", "value": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 0.4,
+            "gravitationalConstant": -30,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
