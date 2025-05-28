@@ -1,0 +1,127 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "skyblue", "fixed": true, "font": {"size": 40}, "id": "Ken Griffin", "label": "Ken Griffin", "shape": "dot", "size": 188.75, "title": "Person: Ken Griffin", "x": 1000.0, "y": 0.0}, {"color": "skyblue", "fixed": true, "font": {"size": 40}, "id": "Jamie Dimon", "label": "Jamie Dimon", "shape": "dot", "size": 188.75, "title": "Person: Jamie Dimon", "x": 309.01699437494744, "y": 951.0565162951535}, {"color": "skyblue", "fixed": true, "font": {"size": 40}, "id": "David Solomon", "label": "David Solomon", "shape": "dot", "size": 188.75, "title": "Person: David Solomon", "x": -809.0169943749473, "y": 587.7852522924733}, {"color": "skyblue", "fixed": true, "font": {"size": 40}, "id": "Donald Trump", "label": "Donald Trump", "shape": "dot", "size": 188.75, "title": "Person: Donald Trump", "x": -809.0169943749476, "y": -587.785252292473}, {"color": "skyblue", "fixed": true, "font": {"size": 40}, "id": "Jane Fraser", "label": "Jane Fraser", "shape": "dot", "size": 188.75, "title": "Person: Jane Fraser", "x": 309.0169943749472, "y": -951.0565162951536}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Citadel", "label": "Citadel", "shape": "dot", "size": 75.5, "title": "Org: Citadel", "x": 1500.0, "y": 0.0}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Bloomberg", "label": "Bloomberg", "shape": "dot", "size": 75.5, "title": "Org: Bloomberg", "x": 1404.5084971874737, "y": 293.8926261462366}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Goldman Sachs", "label": "Goldman Sachs", "shape": "dot", "size": 75.5, "title": "Org: Goldman Sachs", "x": 1154.5084971874737, "y": 475.52825814757676}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Goldman", "label": "Goldman", "shape": "dot", "size": 75.5, "title": "Org: Goldman", "x": 845.4915028125263, "y": 475.5282581475768}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "UBS", "label": "UBS", "shape": "dot", "size": 75.5, "title": "Org: UBS", "x": 595.4915028125263, "y": 293.89262614623664}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "JPMorgan", "label": "JPMorgan", "shape": "dot", "size": 75.5, "title": "Org: JPMorgan", "x": 500.0, "y": 6.123233995736766e-14}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Citadel Securities", "label": "Citadel Securities", "shape": "dot", "size": 75.5, "title": "Org: Citadel Securities", "x": 595.4915028125263, "y": -293.8926261462365}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Millennium", "label": "Millennium", "shape": "dot", "size": 75.5, "title": "Org: Millennium", "x": 845.4915028125263, "y": -475.52825814757676}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Morgan Stanley", "label": "Morgan Stanley", "shape": "dot", "size": 75.5, "title": "Org: Morgan Stanley", "x": 1154.5084971874735, "y": -475.5282581475768}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Barclays", "label": "Barclays", "shape": "dot", "size": 75.5, "title": "Org: Barclays", "x": 1404.5084971874737, "y": -293.8926261462367}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Citi", "label": "Citi", "shape": "dot", "size": 75.5, "title": "Org: Citi", "x": 154.50849718747378, "y": 1426.5847744427303}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "WSJ", "label": "WSJ", "shape": "dot", "size": 75.5, "title": "Org: WSJ", "x": -95.49150281252622, "y": 1244.9491424413902}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Financial Times", "label": "Financial Times", "shape": "dot", "size": 75.5, "title": "Org: Financial Times", "x": 154.50849718747367, "y": 475.52825814757676}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Bank of America", "label": "Bank of America", "shape": "dot", "size": 75.5, "title": "Org: Bank of America", "x": -404.5084971874739, "y": -881.6778784387097}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Deutsche Bank", "label": "Deutsche Bank", "shape": "dot", "size": 75.5, "title": "Org: Deutsche Bank", "x": 463.5254915624208, "y": -1426.5847744427306}]);
+                  edges = new vis.DataSet([{"from": "Ken Griffin", "title": "Weight: 21", "to": "Citadel", "value": 21}, {"from": "Ken Griffin", "title": "Weight: 13", "to": "Bloomberg", "value": 13}, {"from": "Ken Griffin", "title": "Weight: 9", "to": "Goldman Sachs", "value": 9}, {"from": "Ken Griffin", "title": "Weight: 7", "to": "Goldman", "value": 7}, {"from": "Ken Griffin", "title": "Weight: 6", "to": "UBS", "value": 6}, {"from": "Ken Griffin", "title": "Weight: 6", "to": "JPMorgan", "value": 6}, {"from": "Ken Griffin", "title": "Weight: 6", "to": "Citadel Securities", "value": 6}, {"from": "Ken Griffin", "title": "Weight: 6", "to": "Millennium", "value": 6}, {"from": "Ken Griffin", "title": "Weight: 5", "to": "Morgan Stanley", "value": 5}, {"from": "Ken Griffin", "title": "Weight: 5", "to": "Barclays", "value": 5}, {"from": "Citadel", "title": "Weight: 7", "to": "David Solomon", "value": 7}, {"from": "Bloomberg", "title": "Weight: 28", "to": "Jamie Dimon", "value": 28}, {"from": "Bloomberg", "title": "Weight: 17", "to": "David Solomon", "value": 17}, {"from": "Bloomberg", "title": "Weight: 38", "to": "Donald Trump", "value": 38}, {"from": "Bloomberg", "title": "Weight: 8", "to": "Jane Fraser", "value": 8}, {"from": "Goldman Sachs", "title": "Weight: 23", "to": "Jamie Dimon", "value": 23}, {"from": "Goldman Sachs", "title": "Weight: 31", "to": "David Solomon", "value": 31}, {"from": "Goldman Sachs", "title": "Weight: 32", "to": "Donald Trump", "value": 32}, {"from": "Goldman Sachs", "title": "Weight: 12", "to": "Jane Fraser", "value": 12}, {"from": "Goldman", "title": "Weight: 11", "to": "Jamie Dimon", "value": 11}, {"from": "Goldman", "title": "Weight: 26", "to": "David Solomon", "value": 26}, {"from": "Goldman", "title": "Weight: 18", "to": "Donald Trump", "value": 18}, {"from": "Goldman", "title": "Weight: 7", "to": "Jane Fraser", "value": 7}, {"from": "UBS", "title": "Weight: 14", "to": "Jamie Dimon", "value": 14}, {"from": "UBS", "title": "Weight: 9", "to": "David Solomon", "value": 9}, {"from": "UBS", "title": "Weight: 16", "to": "Donald Trump", "value": 16}, {"from": "JPMorgan", "title": "Weight: 37", "to": "Jamie Dimon", "value": 37}, {"from": "JPMorgan", "title": "Weight: 18", "to": "David Solomon", "value": 18}, {"from": "JPMorgan", "title": "Weight: 25", "to": "Donald Trump", "value": 25}, {"from": "JPMorgan", "title": "Weight: 14", "to": "Jane Fraser", "value": 14}, {"from": "Morgan Stanley", "title": "Weight: 10", "to": "Jamie Dimon", "value": 10}, {"from": "Morgan Stanley", "title": "Weight: 10", "to": "David Solomon", "value": 10}, {"from": "Morgan Stanley", "title": "Weight: 20", "to": "Donald Trump", "value": 20}, {"from": "Morgan Stanley", "title": "Weight: 6", "to": "Jane Fraser", "value": 6}, {"from": "Barclays", "title": "Weight: 14", "to": "Jamie Dimon", "value": 14}, {"from": "Barclays", "title": "Weight: 6", "to": "Jane Fraser", "value": 6}, {"from": "Jamie Dimon", "title": "Weight: 21", "to": "Citi", "value": 21}, {"from": "Jamie Dimon", "title": "Weight: 18", "to": "WSJ", "value": 18}, {"from": "Jamie Dimon", "title": "Weight: 12", "to": "Financial Times", "value": 12}, {"from": "Citi", "title": "Weight: 12", "to": "David Solomon", "value": 12}, {"from": "Citi", "title": "Weight: 22", "to": "Donald Trump", "value": 22}, {"from": "Citi", "title": "Weight: 21", "to": "Jane Fraser", "value": 21}, {"from": "WSJ", "title": "Weight: 11", "to": "David Solomon", "value": 11}, {"from": "WSJ", "title": "Weight: 23", "to": "Donald Trump", "value": 23}, {"from": "WSJ", "title": "Weight: 6", "to": "Jane Fraser", "value": 6}, {"from": "Financial Times", "title": "Weight: 10", "to": "David Solomon", "value": 10}, {"from": "Financial Times", "title": "Weight: 18", "to": "Donald Trump", "value": 18}, {"from": "Donald Trump", "title": "Weight: 14", "to": "Bank of America", "value": 14}, {"from": "Bank of America", "title": "Weight: 5", "to": "Jane Fraser", "value": 5}, {"from": "Jane Fraser", "title": "Weight: 5", "to": "Deutsche Bank", "value": 5}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"physics": {"enabled": false}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

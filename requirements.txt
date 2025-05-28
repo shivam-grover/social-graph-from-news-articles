@@ -1,0 +1,15 @@
+spacy==3.7.5
+elasticsearch==7.17.10
+beautifulsoup4==4.12.3
+requests==2.31.0
+lxml==4.9.3
+
+pandas==1.5.3
+matplotlib==3.9.1
+seaborn==0.12.2
+scipy==1.10.1
+plotly==5.17.0
+pyvis==0.3.1
+networkx==3.1
+
+neo4j==5.19.0

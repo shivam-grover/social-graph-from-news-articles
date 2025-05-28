@@ -1,0 +1,127 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "skyblue", "fixed": true, "font": {"size": 40}, "id": "Donald Trump", "label": "Donald Trump", "shape": "dot", "size": 94.375, "title": "Person: Donald Trump", "x": 1000.0, "y": 0.0}, {"color": "skyblue", "fixed": true, "font": {"size": 40}, "id": "Jamie Dimon", "label": "Jamie Dimon", "shape": "dot", "size": 94.375, "title": "Person: Jamie Dimon", "x": 309.01699437494744, "y": 951.0565162951535}, {"color": "skyblue", "fixed": true, "font": {"size": 40}, "id": "David Solomon", "label": "David Solomon", "shape": "dot", "size": 94.375, "title": "Person: David Solomon", "x": -809.0169943749473, "y": 587.7852522924733}, {"color": "skyblue", "fixed": true, "font": {"size": 40}, "id": "Ken Griffin", "label": "Ken Griffin", "shape": "dot", "size": 94.375, "title": "Person: Ken Griffin", "x": -809.0169943749476, "y": -587.785252292473}, {"color": "skyblue", "fixed": true, "font": {"size": 40}, "id": "Jane Fraser", "label": "Jane Fraser", "shape": "dot", "size": 94.375, "title": "Person: Jane Fraser", "x": 309.0169943749472, "y": -951.0565162951536}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Bloomberg", "label": "Bloomberg", "shape": "dot", "size": 37.75, "title": "Org: Bloomberg", "x": 1500.0, "y": 0.0}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Goldman Sachs", "label": "Goldman Sachs", "shape": "dot", "size": 37.75, "title": "Org: Goldman Sachs", "x": 1484.2915805643156, "y": 124.34494358242739}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "JPMorgan", "label": "JPMorgan", "shape": "dot", "size": 37.75, "title": "Org: JPMorgan", "x": 1438.1533400219319, "y": 240.87683705085766}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "WSJ", "label": "WSJ", "shape": "dot", "size": 37.75, "title": "Org: WSJ", "x": 1364.4843137107057, "y": 342.27355296434433}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Citi", "label": "Citi", "shape": "dot", "size": 37.75, "title": "Org: Citi", "x": 1267.9133974894983, "y": 422.16396275100755}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Morgan Stanley", "label": "Morgan Stanley", "shape": "dot", "size": 37.75, "title": "Org: Morgan Stanley", "x": 1154.5084971874737, "y": 475.52825814757676}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Goldman", "label": "Goldman", "shape": "dot", "size": 37.75, "title": "Org: Goldman", "x": 1031.3952597646567, "y": 499.0133642141358}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Financial Times", "label": "Financial Times", "shape": "dot", "size": 37.75, "title": "Org: Financial Times", "x": 906.3093427071377, "y": 491.14362536434436}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "UBS", "label": "UBS", "shape": "dot", "size": 37.75, "title": "Org: UBS", "x": 787.1103542174636, "y": 452.41352623300975}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Bank of America", "label": "Bank of America", "shape": "dot", "size": 37.75, "title": "Org: Bank of America", "x": 681.2880051256551, "y": 385.25662138789465}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Deutsche Bank", "label": "Deutsche Bank", "shape": "dot", "size": 37.75, "title": "Org: Deutsche Bank", "x": 595.4915028125263, "y": 293.89262614623664}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Barclays", "label": "Barclays", "shape": "dot", "size": 37.75, "title": "Org: Barclays", "x": 535.1117570558742, "y": 184.06227634233906}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Citadel", "label": "Citadel", "shape": "dot", "size": 37.75, "title": "Org: Citadel", "x": 503.9426493427611, "y": 62.66661678215227}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Business Insider", "label": "Business Insider", "shape": "dot", "size": 37.75, "title": "Org: Business Insider", "x": 503.94264934276106, "y": -62.66661678215214}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Financial News", "label": "Financial News", "shape": "dot", "size": 37.75, "title": "Org: Financial News", "x": 535.1117570558742, "y": -184.06227634233895}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Jefferies", "label": "Jefferies", "shape": "dot", "size": 37.75, "title": "Org: Jefferies", "x": 595.491502812526, "y": -293.89262614623635}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "HSBC", "label": "HSBC", "shape": "dot", "size": 37.75, "title": "Org: HSBC", "x": 681.2880051256552, "y": -385.25662138789465}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "EMEA", "label": "EMEA", "shape": "dot", "size": 37.75, "title": "Org: EMEA", "x": 787.110354217464, "y": -452.4135262330099}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Credit Suisse", "label": "Credit Suisse", "shape": "dot", "size": 37.75, "title": "Org: Credit Suisse", "x": 906.3093427071377, "y": -491.14362536434436}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Millennium", "label": "Millennium", "shape": "dot", "size": 37.75, "title": "Org: Millennium", "x": 1031.3952597646564, "y": -499.0133642141358}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Citadel Securities", "label": "Citadel Securities", "shape": "dot", "size": 37.75, "title": "Org: Citadel Securities", "x": 1154.5084971874735, "y": -475.5282581475768}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Deutsche", "label": "Deutsche", "shape": "dot", "size": 37.75, "title": "Org: Deutsche", "x": 1267.9133974894985, "y": -422.1639627510075}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "BNP Paribas", "label": "BNP Paribas", "shape": "dot", "size": 37.75, "title": "Org: BNP Paribas", "x": 1364.4843137107057, "y": -342.27355296434445}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Nomura", "label": "Nomura", "shape": "dot", "size": 37.75, "title": "Org: Nomura", "x": 1438.1533400219316, "y": -240.87683705085806}, {"color": "orange", "fixed": true, "font": {"size": 40}, "id": "Jane Street", "label": "Jane Street", "shape": "dot", "size": 37.75, "title": "Org: Jane Street", "x": 1484.2915805643156, "y": -124.34494358242767}]);
+                  edges = new vis.DataSet([{"from": "Donald Trump", "title": "Weight: 38", "to": "Bloomberg", "value": 38}, {"from": "Donald Trump", "title": "Weight: 32", "to": "Goldman Sachs", "value": 32}, {"from": "Donald Trump", "title": "Weight: 25", "to": "JPMorgan", "value": 25}, {"from": "Donald Trump", "title": "Weight: 23", "to": "WSJ", "value": 23}, {"from": "Donald Trump", "title": "Weight: 22", "to": "Citi", "value": 22}, {"from": "Donald Trump", "title": "Weight: 20", "to": "Morgan Stanley", "value": 20}, {"from": "Donald Trump", "title": "Weight: 18", "to": "Goldman", "value": 18}, {"from": "Donald Trump", "title": "Weight: 18", "to": "Financial Times", "value": 18}, {"from": "Donald Trump", "title": "Weight: 16", "to": "UBS", "value": 16}, {"from": "Donald Trump", "title": "Weight: 14", "to": "Bank of America", "value": 14}, {"from": "Donald Trump", "title": "Weight: 14", "to": "Deutsche Bank", "value": 14}, {"from": "Donald Trump", "title": "Weight: 12", "to": "Barclays", "value": 12}, {"from": "Donald Trump", "title": "Weight: 12", "to": "Citadel", "value": 12}, {"from": "Donald Trump", "title": "Weight: 11", "to": "Business Insider", "value": 11}, {"from": "Donald Trump", "title": "Weight: 11", "to": "Financial News", "value": 11}, {"from": "Donald Trump", "title": "Weight: 9", "to": "Jefferies", "value": 9}, {"from": "Donald Trump", "title": "Weight: 8", "to": "HSBC", "value": 8}, {"from": "Donald Trump", "title": "Weight: 7", "to": "EMEA", "value": 7}, {"from": "Donald Trump", "title": "Weight: 6", "to": "Credit Suisse", "value": 6}, {"from": "Donald Trump", "title": "Weight: 6", "to": "Millennium", "value": 6}, {"from": "Donald Trump", "title": "Weight: 5", "to": "Citadel Securities", "value": 5}, {"from": "Donald Trump", "title": "Weight: 4", "to": "Deutsche", "value": 4}, {"from": "Donald Trump", "title": "Weight: 3", "to": "BNP Paribas", "value": 3}, {"from": "Donald Trump", "title": "Weight: 3", "to": "Nomura", "value": 3}, {"from": "Donald Trump", "title": "Weight: 2", "to": "Jane Street", "value": 2}, {"from": "Bloomberg", "title": "Weight: 28", "to": "Jamie Dimon", "value": 28}, {"from": "Bloomberg", "title": "Weight: 17", "to": "David Solomon", "value": 17}, {"from": "Bloomberg", "title": "Weight: 13", "to": "Ken Griffin", "value": 13}, {"from": "Bloomberg", "title": "Weight: 8", "to": "Jane Fraser", "value": 8}, {"from": "Goldman Sachs", "title": "Weight: 23", "to": "Jamie Dimon", "value": 23}, {"from": "Goldman Sachs", "title": "Weight: 31", "to": "David Solomon", "value": 31}, {"from": "Goldman Sachs", "title": "Weight: 12", "to": "Jane Fraser", "value": 12}, {"from": "Goldman Sachs", "title": "Weight: 9", "to": "Ken Griffin", "value": 9}, {"from": "JPMorgan", "title": "Weight: 37", "to": "Jamie Dimon", "value": 37}, {"from": "JPMorgan", "title": "Weight: 18", "to": "David Solomon", "value": 18}, {"from": "JPMorgan", "title": "Weight: 14", "to": "Jane Fraser", "value": 14}, {"from": "JPMorgan", "title": "Weight: 6", "to": "Ken Griffin", "value": 6}, {"from": "WSJ", "title": "Weight: 18", "to": "Jamie Dimon", "value": 18}, {"from": "WSJ", "title": "Weight: 11", "to": "David Solomon", "value": 11}, {"from": "WSJ", "title": "Weight: 6", "to": "Jane Fraser", "value": 6}, {"from": "WSJ", "title": "Weight: 5", "to": "Ken Griffin", "value": 5}, {"from": "Citi", "title": "Weight: 21", "to": "Jamie Dimon", "value": 21}, {"from": "Citi", "title": "Weight: 12", "to": "David Solomon", "value": 12}, {"from": "Citi", "title": "Weight: 21", "to": "Jane Fraser", "value": 21}, {"from": "Citi", "title": "Weight: 4", "to": "Ken Griffin", "value": 4}, {"from": "Morgan Stanley", "title": "Weight: 10", "to": "Jamie Dimon", "value": 10}, {"from": "Morgan Stanley", "title": "Weight: 10", "to": "David Solomon", "value": 10}, {"from": "Morgan Stanley", "title": "Weight: 5", "to": "Ken Griffin", "value": 5}, {"from": "Morgan Stanley", "title": "Weight: 6", "to": "Jane Fraser", "value": 6}, {"from": "Goldman", "title": "Weight: 11", "to": "Jamie Dimon", "value": 11}, {"from": "Goldman", "title": "Weight: 26", "to": "David Solomon", "value": 26}, {"from": "Goldman", "title": "Weight: 7", "to": "Ken Griffin", "value": 7}, {"from": "Goldman", "title": "Weight: 7", "to": "Jane Fraser", "value": 7}, {"from": "Financial Times", "title": "Weight: 12", "to": "Jamie Dimon", "value": 12}, {"from": "Financial Times", "title": "Weight: 10", "to": "David Solomon", "value": 10}, {"from": "Financial Times", "title": "Weight: 3", "to": "Ken Griffin", "value": 3}, {"from": "Financial Times", "title": "Weight: 4", "to": "Jane Fraser", "value": 4}, {"from": "UBS", "title": "Weight: 14", "to": "Jamie Dimon", "value": 14}, {"from": "UBS", "title": "Weight: 9", "to": "David Solomon", "value": 9}, {"from": "UBS", "title": "Weight: 6", "to": "Ken Griffin", "value": 6}, {"from": "UBS", "title": "Weight: 4", "to": "Jane Fraser", "value": 4}, {"from": "Bank of America", "title": "Weight: 6", "to": "Jamie Dimon", "value": 6}, {"from": "Bank of America", "title": "Weight: 6", "to": "David Solomon", "value": 6}, {"from": "Bank of America", "title": "Weight: 2", "to": "Ken Griffin", "value": 2}, {"from": "Bank of America", "title": "Weight: 5", "to": "Jane Fraser", "value": 5}, {"from": "Deutsche Bank", "title": "Weight: 6", "to": "Jamie Dimon", "value": 6}, {"from": "Deutsche Bank", "title": "Weight: 6", "to": "David Solomon", "value": 6}, {"from": "Deutsche Bank", "title": "Weight: 2", "to": "Ken Griffin", "value": 2}, {"from": "Deutsche Bank", "title": "Weight: 5", "to": "Jane Fraser", "value": 5}, {"from": "Barclays", "title": "Weight: 14", "to": "Jamie Dimon", "value": 14}, {"from": "Barclays", "title": "Weight: 6", "to": "David Solomon", "value": 6}, {"from": "Barclays", "title": "Weight: 5", "to": "Ken Griffin", "value": 5}, {"from": "Barclays", "title": "Weight: 6", "to": "Jane Fraser", "value": 6}, {"from": "Citadel", "title": "Weight: 9", "to": "Jamie Dimon", "value": 9}, {"from": "Citadel", "title": "Weight: 7", "to": "David Solomon", "value": 7}, {"from": "Citadel", "title": "Weight: 21", "to": "Ken Griffin", "value": 21}, {"from": "Business Insider", "title": "Weight: 10", "to": "Jamie Dimon", "value": 10}, {"from": "Business Insider", "title": "Weight: 6", "to": "David Solomon", "value": 6}, {"from": "Business Insider", "title": "Weight: 2", "to": "Ken Griffin", "value": 2}, {"from": "Business Insider", "title": "Weight: 2", "to": "Jane Fraser", "value": 2}, {"from": "Financial News", "title": "Weight: 10", "to": "Jamie Dimon", "value": 10}, {"from": "Financial News", "title": "Weight: 6", "to": "David Solomon", "value": 6}, {"from": "Financial News", "title": "Weight: 3", "to": "Ken Griffin", "value": 3}, {"from": "Financial News", "title": "Weight: 2", "to": "Jane Fraser", "value": 2}, {"from": "Jefferies", "title": "Weight: 4", "to": "Jamie Dimon", "value": 4}, {"from": "Jefferies", "title": "Weight: 1", "to": "David Solomon", "value": 1}, {"from": "Jefferies", "title": "Weight: 1", "to": "Jane Fraser", "value": 1}, {"from": "HSBC", "title": "Weight: 7", "to": "Jamie Dimon", "value": 7}, {"from": "HSBC", "title": "Weight: 5", "to": "David Solomon", "value": 5}, {"from": "HSBC", "title": "Weight: 3", "to": "Ken Griffin", "value": 3}, {"from": "HSBC", "title": "Weight: 2", "to": "Jane Fraser", "value": 2}, {"from": "EMEA", "title": "Weight: 3", "to": "Jamie Dimon", "value": 3}, {"from": "EMEA", "title": "Weight: 5", "to": "David Solomon", "value": 5}, {"from": "EMEA", "title": "Weight: 2", "to": "Ken Griffin", "value": 2}, {"from": "EMEA", "title": "Weight: 2", "to": "Jane Fraser", "value": 2}, {"from": "Credit Suisse", "title": "Weight: 7", "to": "Jamie Dimon", "value": 7}, {"from": "Credit Suisse", "title": "Weight: 6", "to": "David Solomon", "value": 6}, {"from": "Credit Suisse", "title": "Weight: 2", "to": "Ken Griffin", "value": 2}, {"from": "Credit Suisse", "title": "Weight: 2", "to": "Jane Fraser", "value": 2}, {"from": "Millennium", "title": "Weight: 7", "to": "Jamie Dimon", "value": 7}, {"from": "Millennium", "title": "Weight: 4", "to": "David Solomon", "value": 4}, {"from": "Millennium", "title": "Weight: 6", "to": "Ken Griffin", "value": 6}, {"from": "Millennium", "title": "Weight: 1", "to": "Jane Fraser", "value": 1}, {"from": "Citadel Securities", "title": "Weight: 4", "to": "Jamie Dimon", "value": 4}, {"from": "Citadel Securities", "title": "Weight: 6", "to": "Ken Griffin", "value": 6}, {"from": "Deutsche", "title": "Weight: 2", "to": "Jamie Dimon", "value": 2}, {"from": "Deutsche", "title": "Weight: 1", "to": "David Solomon", "value": 1}, {"from": "Deutsche", "title": "Weight: 1", "to": "Ken Griffin", "value": 1}, {"from": "Deutsche", "title": "Weight: 1", "to": "Jane Fraser", "value": 1}, {"from": "BNP Paribas", "title": "Weight: 3", "to": "Jamie Dimon", "value": 3}, {"from": "BNP Paribas", "title": "Weight: 4", "to": "David Solomon", "value": 4}, {"from": "BNP Paribas", "title": "Weight: 2", "to": "Ken Griffin", "value": 2}, {"from": "BNP Paribas", "title": "Weight: 1", "to": "Jane Fraser", "value": 1}, {"from": "Nomura", "title": "Weight: 2", "to": "Jamie Dimon", "value": 2}, {"from": "Nomura", "title": "Weight: 4", "to": "David Solomon", "value": 4}, {"from": "Nomura", "title": "Weight: 1", "to": "Ken Griffin", "value": 1}, {"from": "Jane Street", "title": "Weight: 3", "to": "Ken Griffin", "value": 3}, {"from": "Jane Street", "title": "Weight: 1", "to": "Jane Fraser", "value": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"physics": {"enabled": false}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
